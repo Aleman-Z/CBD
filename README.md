@@ -1,4 +1,4 @@
-# CBD
+# CBD 🌿
 
 # Table of content
 
