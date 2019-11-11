@@ -1,3 +1,11 @@
+%Starting times for Rat2-Rat5.
+t1(1) = duration([12 0 0]);
+t1(2) = duration([11 53 0]);
+t1(3) = duration([12 0 0]);
+t1(4) = duration([11 54 0]);
+
+t2=t1+seconds(durations_trials)'; %Values calculated from a previous iteration.
+
 %Add folder to path and load experiment data. 
 
 % selpath = uigetdir('C:\','Add Adritools folder to path');
