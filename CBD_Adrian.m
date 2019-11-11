@@ -1,11 +1,3 @@
-%Starting times for Rat2-Rat5.
-t1(1) = duration([12 0 0]);
-t1(2) = duration([11 53 0]);
-t1(3) = duration([12 0 0]);
-t1(4) = duration([11 54 0]);
-
-t2=t1+seconds(durations_trials)'; %Values calculated from a previous iteration.
-
 %Add folder to path and load experiment data. 
 
 % selpath = uigetdir('C:\','Add Adritools folder to path');
@@ -21,6 +13,16 @@ clear selpath
 %Go to folder with CBD Matlab files.
 selpath = uigetdir('C:\','Select CBD_acutes folder');
 cd(selpath)
+
+
+%Starting times for Rat2-Rat5.
+t1(1) = duration([12 0 0]);
+t1(2) = duration([11 53 0]);
+t1(3) = duration([12 0 0]);
+t1(4) = duration([11 54 0]);
+
+t2=t1+seconds(durations_trials)'; %Values calculated from a previous iteration.
+
 
 % durations_trials=cell(length(rats),1);
 durations_trials=zeros(length(rats),1);
