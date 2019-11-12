@@ -58,8 +58,10 @@ cf1=cfold(cellfun(@(x) ~isempty(strfind(x,num2str(chan(1)))),cfold));
 'Loading HPC'
 load(cf1{1})
 
-% importing eeg signals
-LFP_HPC = ans;
+clear ans HPC_filt HPC_filt_ds
+
+% % importing eeg signals
+% LFP_HPC = ans;
 
 %For duration uncomment this:
 if find_duration==1
@@ -89,9 +91,11 @@ if downsample_data==1
 cf1=cfold(cellfun(@(x) ~isempty(strfind(x,num2str(chan(2)))),cfold));
 'Loading PFC'
 load(cf1{1})
+clear ans HPC_filt HPC_filt_ds
 
 % importing eeg signals
-LFP_PFC = ans;
+LFP_PFC = LFP_HPC;
+clear LFP_HPC
 
 PFC_filt=filtfilt(b,a,LFP_PFC);
 clear LFP_PFC
