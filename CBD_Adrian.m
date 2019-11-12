@@ -77,6 +77,7 @@ Wn=[fs_new/fs ]; % Cutoff=300 Hz
 HPC_filt=filtfilt(b,a,LFP_HPC);
 % HPC_filt=decimator(HPC_filt,fs/fs_new);
 % HPC_filt=HPC_filt';
+clear LFP_HPC
 HPC_filt=downsample(HPC_filt,fs/fs_new);
 
 % HPC_filt_ds = downsample(LFP_HPC, DS_fac);
@@ -96,6 +97,7 @@ nw=1.25; %Minimum taper value.
 
 M=[ratio_theta; ratio_sw];
 save('M.mat','M')
+clear M ratio_sw ratio_theta 
 
 if otherstuff==1
     % Calculating means for index_nrem and index_rem
