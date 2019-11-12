@@ -77,7 +77,7 @@ end
 
 for r=1:length(rats)
 
-cd('C:\Users\addri\Documents\Donders\Projects\CBD\Downsampled_data')
+cd(selpath)
 
 % %Find and access proper folder.
 cfold=dir;
