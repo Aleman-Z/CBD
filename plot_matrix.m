@@ -45,15 +45,16 @@ if plot_allanimals==1;
 else
     %% Epoching data
     T1=1;
-    T2=1;
+    T2=T1+2*(300);
     con=1;
     while T2 <= length(HPC_normal)
-    T2=T1+2*(300);    
+    %T2=T1+2*(300);    
       new_seg = HPC_normal(T1:T2);
       NC(con,:)=new_seg;
 
     con=con+1;
-    T1=T2;
+    T2=T2+2*(300);
+    T1=T1+2*(300);
     end
 [pxx,f]= periodogram(NC.',hann(size(NC.',1)),size(NC.',1),300);    
 %%
