@@ -4,6 +4,7 @@
 % addpath(genpath(selpath))
 find_duration=0;
 otherstuff=0;
+downsample_data=1;
 
 selpath = uigetdir('C:\','Add CBD github folder to path');
 addpath(genpath(selpath))
@@ -78,7 +79,30 @@ HPC_filt=filtfilt(b,a,LFP_HPC);
 % HPC_filt=decimator(HPC_filt,fs/fs_new);
 % HPC_filt=HPC_filt';
 clear LFP_HPC
-HPC_filt=downsample(HPC_filt,fs/fs_new);
+HPC_downsampled=downsample(HPC_filt,fs/fs_new);
+clear HPC_filt
+
+if downsample_data==1
+    save('HPC_downsampled.mat','HPC_downsampled')
+    
+%PFC
+cf1=cfold(cellfun(@(x) ~isempty(strfind(x,num2str(chan(2)))),cfold));
+'Loading PFC'
+load(cf1{1})
+
+% importing eeg signals
+LFP_PFC = ans;
+
+PFC_filt=filtfilt(b,a,LFP_PFC);
+clear LFP_PFC
+PFC_downsampled=downsample(PFC_filt,fs/fs_new);
+clear PFC_filt
+
+save('PFC_downsampled.mat','PFC_downsampled')
+
+continue
+
+end
 
 % HPC_filt_ds = downsample(LFP_HPC, DS_fac);
 % SampleRate_ds = SampleRate/DS_fac;
