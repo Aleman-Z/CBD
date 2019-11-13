@@ -10,7 +10,7 @@
 %%
 selpath = uigetdir('C:\','Select folder with Downsampled_data');
 
-plot_allanimals=0;
+plot_allanimals=1;
 %Starting times for Rat2-Rat5.
 t1(1) = duration([12 0 0]);
 t1(2) = duration([11 53 0]);
@@ -71,8 +71,10 @@ end
         title('Normalized HPC recording')
         yticks([100 200 300 400])
         yticklabels({'Rat 2','Rat 3','Rat 4','Rat 5'})
-        printing('HPC')
+%         printing('HPC_traces')
+        close all
     end
+    xo
 %% PFC
 
 for r=1:length(rats)
@@ -130,7 +132,7 @@ end
         title('Normalized PFC recording')
         yticks([100 200 300 400])
         yticklabels({'Rat 2','Rat 3','Rat 4','Rat 5'})
-        printing('PFC')       
+%         printing('PFC_traces')       
     end
 % %% Periodogram
 % [pxx,w] = periodogram(PFC_normal);
