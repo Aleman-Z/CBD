@@ -51,7 +51,7 @@ cfold=cfold(cellfun(@(x) ~isempty(strfind(x,'.mat')),cfold));
 
 %Parameters
 fs=30000; %Sampling frequency of acquisition.
-fs_new=300; %New sampling frequency. Max freq= fs_new/2.
+fs_new=1000; %New sampling frequency. Max freq= fs_new/2.
 
 %HPC
 cf1=cfold(cellfun(@(x) ~isempty(strfind(x,num2str(chan(1)))),cfold));
@@ -74,7 +74,7 @@ end
 %Should be first filtering and then decimation.
 
 %Butter filter gives smoother signal than Chebyshev.
-Wn=[fs_new/fs ]; % Cutoff=300 Hz
+Wn=[fs_new/fs ]; % Cutoff=500 Hz
 [b,a] = butter(3,Wn); %Filter coefficients for LPF
 
 HPC_filt=filtfilt(b,a,LFP_HPC);
