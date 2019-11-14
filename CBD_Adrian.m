@@ -85,7 +85,7 @@ HPC_downsampled=downsample(HPC_filt,fs/fs_new);
 clear HPC_filt
 
 if downsample_data==1
-    save('HPC_downsampled.mat','HPC_downsampled')
+    save('HPC_downsampled2.mat','HPC_downsampled')
     
 %PFC
 cf1=cfold(cellfun(@(x) ~isempty(strfind(x,num2str(chan(2)))),cfold));
@@ -102,7 +102,7 @@ clear LFP_PFC
 PFC_downsampled=downsample(PFC_filt,fs/fs_new);
 clear PFC_filt
 
-save('PFC_downsampled.mat','PFC_downsampled')
+save('PFC_downsampled2.mat','PFC_downsampled')
 
 continue
 
