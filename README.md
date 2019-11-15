@@ -8,10 +8,11 @@
    * myfirstdraft.m (Irene's code)
 
  * Pipeline by Adrian:
-   * CBD_Adrian.m: Downsamples data and saves.
-   * plot_matrix.m: Downsamples data and saves.
-   * plot_matrix_bands.m: Downsamples data and saves.
-   * plot_matrix_bands_all_areas.m: Downsamples data and saves.   
+   * Define New Experiment using GUI (gui_spectral) and save in CBD_X.mat.
+   * CBD_Adrian.m: Finds durations of trials, downsamples data and saves.
+   * plot_matrix.m: Plots raw signals of all animals for each brain region.
+   * plot_matrix_bands.m: Plots frequency bands of raw signals per brain region.
+   * plot_matrix_bands_all_areas.m: Plots all bands for both areas simultaneously.   
    
  
  * Power_ratio_MT_MovingWin.m: Spectral analysis and binning.  
