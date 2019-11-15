@@ -1,6 +1,6 @@
 # CBD 🌿
 
-# Table of content
+# Table of contents
 
  * Original codes (Different versions):
    * EceGamze.m
