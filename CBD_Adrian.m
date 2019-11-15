@@ -10,7 +10,7 @@ selpath = uigetdir('C:\','Add CBD github folder to path');
 addpath(genpath(selpath))
 
 cd(selpath)
-load('CBD_2.mat')
+load('CBD_3.mat')
 clear selpath
 
 %Go to folder with CBD Matlab files.
@@ -24,10 +24,10 @@ t1(2) = duration([11 53 0]);
 t1(3) = duration([12 0 0]);
 t1(4) = duration([11 54 0]);
 
-t2=t1+seconds(durations_trials)'; %Values calculated from a previous iteration.
-
 if find_duration==1
 durations_trials=zeros(length(rats),1);
+else
+t2=t1+seconds(durations_trials)'; %Values calculated from a previous iteration.    
 end
 
 %Iterations.
