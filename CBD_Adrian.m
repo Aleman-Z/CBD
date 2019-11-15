@@ -58,7 +58,8 @@ fs_new=1000; %New sampling frequency. Max freq= fs_new/2.
 %HPC
 cf1=cfold(cellfun(@(x) ~isempty(strfind(x,num2str(chan(1)))),cfold));
 'Loading HPC'
-load(cf1{1})
+% load(cf1{1})
+[LFP_HPC, ~, ~] = load_open_ephys_data_faster(cf1{1});
 
 clear ans HPC_filt HPC_filt_ds
 
