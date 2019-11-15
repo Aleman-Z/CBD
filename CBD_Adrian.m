@@ -44,10 +44,12 @@ cd(strcat('Rat',num2str(rats(r))));
 chan=getfield(channels,strcat('Rat',num2str(rats(r))));%Electrode channels. 
 
 
-% %Find and load .mat files.
+% %Find and load files.
 cfold=dir;
 cfold={cfold.name};
-cfold=cfold(cellfun(@(x) ~isempty(strfind(x,'output.mat')),cfold));
+% cfold=cfold(cellfun(@(x) ~isempty(strfind(x,'output.mat')),cfold));
+cfold=cfold(cellfun(@(x) ~isempty(strfind(x,'.continuous')),cfold));
+
 
 %Parameters
 fs=30000; %Sampling frequency of acquisition.
