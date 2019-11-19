@@ -1,18 +1,10 @@
-% S1=Matrix{1};
-% S2=Matrix{2};
-% %%
-% plot(linspace(t1(1),t2(1),length(S1(1,:))),S1(1,:))
-% hold on
-% plot(linspace(t1(2),t2(2),length(S2(1,:))),S2(2,:))
-% 
-% %%
-% imagesc(S1(:,:))
+
 %%
 selpath = uigetdir('C:\','Add CBD github folder to path');
 addpath(genpath(selpath))
 
 cd(selpath)
-load('CBD_2.mat')
+load('CBD_3.mat')
 clear selpath
 
 selpath = uigetdir('C:\','Select folder with Downsampled_data');
@@ -26,14 +18,14 @@ t1(4) = duration([11 54 0]);
 
 t2=t1+seconds(durations_trials)'; %Values calculated from a previous iteration.
 % xo
-freq_band.RawSignal=[0 150-1];
+freq_band.RawSignal=[0 500-1];
 freq_band.Delta=[0.1 4];
 freq_band.Theta=[4 8];
 freq_band.SpindlesRange=[10 20];
-freq_band.HighGamma=[80 150-1]; %250 
+freq_band.HighGamma=[80 250]; %250 
 FN=fieldnames(freq_band);
 
-fs=300; %Sampling freq after downsampling.
+fs=1000; %Sampling freq after downsampling.
 %% 
 close all
 for lab=1:length(label1)
@@ -60,7 +52,7 @@ for lab=1:length(label1)
         %Bandpassing.
         if ~strcmp(FN{k},'RawSignal')
             GF=getfield(freq_band,FN{k});
-            Wn=[GF(1)/(fs/2) GF(2)/(fs/2) ]; % Sampling freq=300 Hz.
+            Wn=[GF(1)/(fs/2) GF(2)/(fs/2) ]; % Sampling freq=1000 Hz.
             [b,a] = butter(3,Wn); %Filter coefficients for LPF
             signal_ds=filtfilt(b,a,signal_ds);    
         end
@@ -91,6 +83,7 @@ for lab=1:length(label1)
             s=semilogy(f,(px),'LineWidth',2);
             xlabel('Frequency (Hz)')
             ylabel('Power')
+            xo
             printing(strcat(label1{lab},'_periodogram'))
 
             end
@@ -99,7 +92,8 @@ for lab=1:length(label1)
         if plot_allanimals==1;
             title(strcat('Normalized',{' '},label1{lab},{' '}, 'recording',{' '},FN{k}))
             yticks([100 200 300 400])
-            yticklabels({'Rat 2','Rat 3','Rat 4','Rat 5'})           
+            yticklabels({'Rat 2','Rat 3','Rat 4','Rat 5'}) 
+            xo
             saveas(gcf,strcat(label1{lab},'_traces',FN{k},'.fig'))
 
             close all

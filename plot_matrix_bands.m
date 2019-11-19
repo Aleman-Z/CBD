@@ -1,18 +1,10 @@
-% S1=Matrix{1};
-% S2=Matrix{2};
-% %%
-% plot(linspace(t1(1),t2(1),length(S1(1,:))),S1(1,:))
-% hold on
-% plot(linspace(t1(2),t2(2),length(S2(1,:))),S2(2,:))
-% 
-% %%
-% imagesc(S1(:,:))
+
 %%
 selpath = uigetdir('C:\','Add CBD github folder to path');
 addpath(genpath(selpath))
 
 cd(selpath)
-load('CBD_2.mat')
+load('CBD_3.mat')
 clear selpath
 
 selpath = uigetdir('C:\','Select folder with Downsampled_data');
@@ -26,14 +18,14 @@ t1(4) = duration([11 54 0]);
 
 t2=t1+seconds(durations_trials)'; %Values calculated from a previous iteration.
 % xo
-freq_band.RawSignal=[0 150-1];
+freq_band.RawSignal=[0 500-1];
 freq_band.Delta=[0.1 4];
 freq_band.Theta=[4 8];
 freq_band.SpindlesRange=[10 20];
-freq_band.HighGamma=[80 150-1]; %250 
+freq_band.HighGamma=[80 250]; %250 
 FN=fieldnames(freq_band);
 
-fs_new=300; %Sampling freq after downsampling.
+fs_new=1000; %Sampling freq after downsampling.
 amp_vec=[6 4 4 5 4];
 %% 
 close all
@@ -62,7 +54,7 @@ for lab=1:length(label1)
         %Bandpassing.
         if ~strcmp(FN{k},'RawSignal')
             GF=getfield(freq_band,FN{k});
-            Wn=[GF(1)/(fs_new/2) GF(2)/(fs_new/2) ]; % Sampling freq=300 Hz.
+            Wn=[GF(1)/(fs_new/2) GF(2)/(fs_new/2) ]; % Sampling freq=1000 Hz.
             [b,a] = butter(3,Wn); %Filter coefficients for LPF
             signal_ds=filtfilt(b,a,signal_ds);    
         end
@@ -76,7 +68,7 @@ for lab=1:length(label1)
             else
                 %% Epoching data
                 T1=1;
-                T2=T1+2*(300);
+                T2=T1+2*(fs_new);
                 con=1;
                 while T2 <= length(signal_normal)
                 %T2=T1+2*(300);    
@@ -84,10 +76,10 @@ for lab=1:length(label1)
                   NC(con,:)=new_seg;
 
                 con=con+1;
-                T2=T2+2*(300);
-                T1=T1+2*(300);
+                T2=T2+2*(fs_new);
+                T1=T1+2*(fs_new);
                 end
-            [pxx,f]= periodogram(NC.',hann(size(NC.',1)),size(NC.',1),300);    
+            [pxx,f]= periodogram(NC.',hann(size(NC.',1)),size(NC.',1),fs_new);    
             %%
             px=mean(pxx,2);
             s=semilogy(f,(px),'LineWidth',2);
