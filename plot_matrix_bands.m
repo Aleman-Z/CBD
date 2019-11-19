@@ -19,7 +19,7 @@ t1(4) = duration([11 54 0]);
 t2=t1+seconds(durations_trials)'; %Values calculated from a previous iteration.
 % xo
 freq_band.RawSignal=[0 500-1];
-freq_band.Delta=[0.1 4];
+freq_band.Delta=[0.11 4];
 freq_band.Theta=[4 8];
 freq_band.SpindlesRange=[10 20];
 freq_band.HighGamma=[80 250]; %250 
@@ -96,7 +96,7 @@ for lab=1:length(label1)
             yticks([100 200 300 400 500])
             yticklabels({FN{1},FN{2},FN{3},FN{4},FN{5}})
             ylim([0 600])
-%            xo
+            xo
             cd(selpath)
             saveas(gcf,strcat(label1{lab},'_Rat',num2str(rats(r)),'_bands_zoomed','.fig'))
 

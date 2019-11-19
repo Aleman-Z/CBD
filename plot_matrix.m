@@ -19,7 +19,7 @@ t1(4) = duration([11 54 0]);
 t2=t1+seconds(durations_trials)'; %Values calculated from a previous iteration.
 % xo
 freq_band.RawSignal=[0 500-1];
-freq_band.Delta=[0.1 4];
+freq_band.Delta=[0.11 4];
 freq_band.Theta=[4 8];
 freq_band.SpindlesRange=[10 20];
 freq_band.HighGamma=[80 250]; %250 
