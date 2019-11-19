@@ -32,7 +32,8 @@ colorvec=[
        24    157    233
          233    59    24
 %     233    224    24
- 0  0  0
+% 0  0  0
+255 0 255
     125    24         233
     36    233         24
 
@@ -70,17 +71,27 @@ close all
             [b,a] = butter(3,Wn); %Filter coefficients for LPF
             signal_ds=filtfilt(b,a,signal_ds);    
         end
-        
+        %Normalized version
         signal_normal=(signal_ds-mean(signal_ds))/std(signal_ds);
+        uplim=repmat(mean(signal_normal)+2*std(signal_normal),length(signal_normal),1);
+        lowlim=repmat(mean(signal_normal)-2*std(signal_normal),length(signal_normal),1);
+        
+%         signal_normal=(signal_ds);        
 %xo
             if plot_allanimals==1;
                 if lab==1
                         plot(linspace(t1(r),t2(r),length(signal_normal)),signal_normal*amp_vec(k)+100*k,'Color',colorvec(k,:))
                         hold on
+                        plot(linspace(t1(r),t2(r),length(signal_normal)),uplim*amp_vec(k)+100*k,'Color',[0 0 0],'LineWidth',1)
+                        plot(linspace(t1(r),t2(r),length(signal_normal)),lowlim*amp_vec(k)+100*k,'Color',[0 0 0],'LineWidth',1)
+%                         
                         xlabel('Time')                    
                 else
                         plot(linspace(t1(r),t2(r),length(signal_normal)),signal_normal*amp_vec(k)+100*k+500,'Color',colorvec(k,:))
                         hold on
+                        plot(linspace(t1(r),t2(r),length(signal_normal)),uplim*amp_vec(k)+100*k+500,'Color',[0 0 0],'LineWidth',1)
+                        plot(linspace(t1(r),t2(r),length(signal_normal)),lowlim*amp_vec(k)+100*k+500,'Color',[0 0 0],'LineWidth',1)
+
                         xlabel('Time')                    
                 end
             else
@@ -109,7 +120,7 @@ close all
             end
         % ylabel('Rat')
         end
-        
+        %xo
         end
             if plot_allanimals==1;
 %                title(strcat('Normalized',{' '}, 'recordings',{' '},'Rat',num2str(rats(r))))
@@ -117,7 +128,9 @@ close all
 
                 yticks([100 200 300 400 500 600 700 800 900 1000])
 %                 yticklabels({FN{1},FN{2},FN{3},FN{4},FN{5},FN{1},FN{2},FN{3},FN{4},FN{5}})
-yticklabels({['HPC',' ','Raw'],['HPC',' ','Delta'],['HPC',' ','Theta'],['HPC',' ','Spindles'],['HPC',' ','HighGamma'],['PFC',' ','Raw'],['PFC',' ','Delta'],['PFC',' ','Theta'],['PFC',' ','Spindles'],['PFC',' ','HighGamma']}) 
+%yticklabels({['HPC',' ','Raw'],['HPC',' ','Delta'],['HPC',' ','Theta'],['HPC',' ','Spindles'],['HPC',' ','HighGamma'],['PFC',' ','Raw'],['PFC',' ','Delta'],['PFC',' ','Theta'],['PFC',' ','Spindles'],['PFC',' ','HighGamma']}) 
+yticklabels({['HPC',' ','Raw'],['HPC',' ','Delta',' ','(0.1-4Hz)'],['HPC',' ','Theta',' ','(4-8Hz)'],['HPC',' ','Spindles',' ','(10-20Hz)'],['HPC',' ','HighGamma',' ','(80-250Hz)'],['PFC',' ','Raw'],['PFC',' ','Delta',' ','(0.1-4Hz)'],['PFC',' ','Theta',' ','(4-8Hz)'],['PFC',' ','Spindles',' ','(10-20Hz)'],['PFC',' ','HighGamma',' ','(80-250Hz)']}) 
+                
                 ylim([0 600+500])
                 xo
                 cd(selpath)
