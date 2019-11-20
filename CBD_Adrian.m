@@ -73,11 +73,13 @@ if ~isnan(chan(1)) %Ideal case channel is not NaN.
     [LFP_HPC, ~, ~] = load_open_ephys_data_faster(cf1{1});
 
 else %Take the other area channel just to extract duration. 
-    cf1=cfold(cellfun(@(x) ~isempty(strfind(x,num2str(chan(2)))),cfold));    
-    'Loading HPC'
-    % load(cf1{1})
-    [LFP_HPC, ~, ~] = load_open_ephys_data_faster(cf1{1});
-    LFP_HPC=LFP_HPC.*0; %Multiply by zero when channel was not recorded.
+      if find_duration==1  
+            cf1=cfold(cellfun(@(x) ~isempty(strfind(x,num2str(chan(2)))),cfold));    
+            'Loading HPC'
+            % load(cf1{1})
+            [LFP_HPC, ~, ~] = load_open_ephys_data_faster(cf1{1});
+            LFP_HPC=LFP_HPC.*0; %Multiply by zero when channel was not recorded.
+      end
 end
 
 % clear ans HPC_filt HPC_filt_ds
@@ -91,40 +93,45 @@ if find_duration==1
     continue 
 end
 
-% filtering and downsampling HPC 
-%Adrian's note: Wrong order of decimation.
-%Should be first filtering and then decimation.
-
-%Butter filter gives smoother signal than Chebyshev.
-Wn=[fs_new/fs ]; % Cutoff=500 Hz
-[b,a] = butter(3,Wn); %Filter coefficients for LPF
-
-HPC_filt=filtfilt(b,a,LFP_HPC);
-% HPC_filt=decimator(HPC_filt,fs/fs_new);
-% HPC_filt=HPC_filt';
-clear LFP_HPC
-HPC_downsampled=downsample(HPC_filt,fs/fs_new);
-clear HPC_filt
-
 if downsample_data==1
-    save('HPC_downsampled2.mat','HPC_downsampled')
-    
+    % filtering and downsampling HPC 
+    %Adrian's note: Wrong order of decimation.
+    %Should be first filtering and then decimation.
+
+    %Butter filter gives smoother signal than Chebyshev.
+    Wn=[fs_new/fs ]; % Cutoff=500 Hz
+    [b,a] = butter(3,Wn); %Filter coefficients for LPF
+
+if ~isnan(chan(1)) %Run only if the area was recorded
+    HPC_filt=filtfilt(b,a,LFP_HPC);
+    % HPC_filt=decimator(HPC_filt,fs/fs_new);
+    % HPC_filt=HPC_filt';
+    clear LFP_HPC
+    HPC_downsampled=downsample(HPC_filt,fs/fs_new);
+    clear HPC_filt
+
+    % if downsample_data==1
+        save('HPC_downsampledALL.mat','HPC_downsampled')
+end
+
 %PFC
-cf1=cfold(cellfun(@(x) ~isempty(strfind(x,num2str(chan(2)))),cfold));
-'Loading PFC'
-load(cf1{1})
-clear ans HPC_filt HPC_filt_ds
+if ~isnan(chan(2)) %Run only if the area was recorded
+        cf1=cfold(cellfun(@(x) ~isempty(strfind(x,num2str(chan(2)))),cfold));
+        'Loading PFC'
+        load(cf1{1})
+        clear ans HPC_filt HPC_filt_ds
 
-% importing eeg signals
-LFP_PFC = LFP_HPC;
-clear LFP_HPC
+        % importing eeg signals
+        LFP_PFC = LFP_HPC;
+        clear LFP_HPC
 
-PFC_filt=filtfilt(b,a,LFP_PFC);
-clear LFP_PFC
-PFC_downsampled=downsample(PFC_filt,fs/fs_new);
-clear PFC_filt
+        PFC_filt=filtfilt(b,a,LFP_PFC);
+        clear LFP_PFC
+        PFC_downsampled=downsample(PFC_filt,fs/fs_new);
+        clear PFC_filt
 
-save('PFC_downsampled2.mat','PFC_downsampled')
+        save('PFC_downsampledALL.mat','PFC_downsampled')
+end
 
 continue
 
