@@ -112,6 +112,7 @@ if ~isnan(chan(1)) %Run only if the area was recorded
 
     % if downsample_data==1
         save('HPC_downsampledALL.mat','HPC_downsampled')
+        clear HPC_downsampled
 end
 
 %PFC
@@ -132,6 +133,7 @@ if ~isnan(chan(2)) %Run only if the area was recorded
         clear PFC_filt
 
         save('PFC_downsampledALL.mat','PFC_downsampled')
+        clear PFC_downsampled
 end
 
 continue
