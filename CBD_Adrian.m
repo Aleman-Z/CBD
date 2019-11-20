@@ -66,12 +66,21 @@ fs=30000; %Sampling frequency of acquisition.
 fs_new=500; %New sampling frequency. Max freq= fs_new/2.
 
 %HPC
-cf1=cfold(cellfun(@(x) ~isempty(strfind(x,num2str(chan(1)))),cfold));
-'Loading HPC'
-% load(cf1{1})
-[LFP_HPC, ~, ~] = load_open_ephys_data_faster(cf1{1});
+if ~isnan(chan(1)) %Ideal case channel is not NaN.
+    cf1=cfold(cellfun(@(x) ~isempty(strfind(x,num2str(chan(1)))),cfold));
+    'Loading HPC'
+    % load(cf1{1})
+    [LFP_HPC, ~, ~] = load_open_ephys_data_faster(cf1{1});
 
-clear ans HPC_filt HPC_filt_ds
+else %Take the other area channel just to extract duration. 
+    cf1=cfold(cellfun(@(x) ~isempty(strfind(x,num2str(chan(2)))),cfold));    
+    'Loading HPC'
+    % load(cf1{1})
+    [LFP_HPC, ~, ~] = load_open_ephys_data_faster(cf1{1});
+    LFP_HPC=LFP_HPC.*0; %Multiply by zero when channel was not recorded.
+end
+
+% clear ans HPC_filt HPC_filt_ds
 
 % % importing eeg signals
 % LFP_HPC = ans;
