@@ -25,14 +25,14 @@ t1(3) = duration([12 0 0]);
 t1(4) = duration([11 54 0]);
 
 %Starting times for Rat9-Rat16.
-t1(5) = duration([16 20 0]);
-t1(6) = duration([15 21 0]);
-t1(7) = duration([15 45 0]);
-t1(8) = duration([17 18 0]);
-t1(9) = duration([11 30 0]);
-t1(10) = duration([11 30 0]);
-t1(11) = duration([11 24 0]);
-t1(12) = duration([11 35 0]);
+t1(5) = duration([12 0 0]);
+t1(6) = duration([11 53 0]);
+t1(7) = duration([12 0 0]);
+t1(8) = duration([11 54 0]);
+t1(9) = duration([12 0 0]);
+t1(10) = duration([11 53 0]);
+t1(11) = duration([]);
+t1(12) = duration([]);
 
 if find_duration==1
 durations_trials=zeros(length(rats),1);
@@ -63,7 +63,7 @@ cfold=cfold(cellfun(@(x) ~isempty(strfind(x,'.continuous')),cfold));
 
 %Parameters
 fs=30000; %Sampling frequency of acquisition.
-fs_new=500; %New sampling frequency. Max freq= fs_new/2.
+fs_new=1000; %New sampling frequency. Max freq= fs_new/2.
 
 %HPC
 cf1=cfold(cellfun(@(x) ~isempty(strfind(x,num2str(chan(1)))),cfold));
