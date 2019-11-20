@@ -118,11 +118,12 @@ end
 if ~isnan(chan(2)) %Run only if the area was recorded
         cf1=cfold(cellfun(@(x) ~isempty(strfind(x,num2str(chan(2)))),cfold));
         'Loading PFC'
-        load(cf1{1})
+%         load(cf1{1})
+        [LFP_PFC, ~, ~] = load_open_ephys_data_faster(cf1{1});
         clear ans HPC_filt HPC_filt_ds
 
         % importing eeg signals
-        LFP_PFC = LFP_HPC;
+%         LFP_PFC = LFP_HPC;
         clear LFP_HPC
 
         PFC_filt=filtfilt(b,a,LFP_PFC);
