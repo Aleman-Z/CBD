@@ -19,8 +19,8 @@
    * plot_matrix_bands_all_areas.m: Plots all bands for both areas simultaneously.   
    <img src="plot_matrix_bands_all_areas.png" width="400">
 
-   
- 
+ * CBD_downsample_500Hz.m: Code for further downsampling to 500Hz. Consumes less memory than 1kHz sampled data.  
+
  * Power_ratio_MT_MovingWin.m: Spectral analysis and binning.  
  * States_scoring_HPC.m
 
