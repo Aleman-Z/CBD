@@ -11,7 +11,7 @@
    * Define New Experiment using GUI (gui_spectral.m from [CorticoHippocampal](https://github.com/Aleman-Z/CorticoHippocampal) ) and save in CBD_X.mat.
    * CBD_Adrian.m: Finds durations of trials, downsamples data and saves.
    * plot_matrix.m: Plots raw signals of all animals for each brain region.
-   <img src="plot_matrix.png" width="400">
+   <img src="plot_matrix_pfc.png" width="400">
 
    * plot_matrix_bands.m: Plots frequency bands of raw signals per brain region.
    <img src="plot_matrix_bands.png" width="400">
