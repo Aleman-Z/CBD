@@ -4,7 +4,7 @@ selpath = uigetdir('C:\','Add CBD github folder to path');
 addpath(genpath(selpath))
 
 cd(selpath)
-load('CBD_3.mat')
+load('CBD_4.mat')
 clear selpath
 
 selpath = uigetdir('C:\','Select folder with Downsampled_data');
@@ -16,16 +16,26 @@ t1(2) = duration([11 53 0]);
 t1(3) = duration([12 0 0]);
 t1(4) = duration([11 54 0]);
 
+%Starting times for Rat9-Rat16.
+t1(5) = duration([16 20 0]);
+t1(6) = duration([15 21 0]);
+t1(7) = duration([15 45 0]);
+t1(8) = duration([17 18 0]);
+t1(9) = duration([11 30 0]);
+t1(10) = duration([11 30 0]);
+t1(11) = duration([11 24 0]);
+t1(12) = duration([11 35 0]);
+
 t2=t1+seconds(durations_trials)'; %Values calculated from a previous iteration.
 % xo
 freq_band.RawSignal=[0 500-1];
 freq_band.Delta=[0.11 4];
 freq_band.Theta=[4 8];
 freq_band.SpindlesRange=[10 20];
-freq_band.HighGamma=[80 250]; %250 
+freq_band.HighGamma=[80 250-1]; %250 
 FN=fieldnames(freq_band);
 
-fs_new=1000; %Sampling freq after downsampling.
+fs_new=500; %Sampling freq after downsampling.
 amp_vec=[7 4 4 4 5];
 
 colorvec=[
@@ -39,10 +49,31 @@ colorvec=[
 
 ];
 colorvec=colorvec./255;
+
+rat_condition={
+'CBD'    
+'Vehicle'
+'Vehicle'
+'CBD'
+'Vehicle'
+'CBD'
+'CBD'
+'Vehicle'
+'Vehicle'
+'Vehicle'
+'CBD'
+'CBD'
+    };
 %% 
 close all
+% stats_vec=nan(length(rats),length(label1),length(fieldnames(freq_band)),2); %Declare vector to save values.
+% stats_vec_norm=nan(length(rats),length(label1),length(fieldnames(freq_band)),2); %Declare vector to save values.
+
 %for lab=1:length(label1)
     for r=1:length(rats)
+        stats_vec=nan(length(label1),length(fieldnames(freq_band)),2); %Declare vector to save values.
+        stats_vec_norm=nan(length(label1),length(fieldnames(freq_band)),2); %Declare vector to save values.
+       
         for lab=1:length(label1)
         for k=1:length(fieldnames(freq_band))
 
@@ -52,7 +83,7 @@ close all
         % %Find and access proper folder.
         cfold=dir;
         cfold={cfold.name};
-        cfold=cfold(cellfun(@(x) ~isempty(strfind(x,num2str(rats(r)))),cfold));
+        cfold=cfold(cellfun(@(x) ~isempty(strfind(x,strcat('Rat',num2str(rats(r))))),cfold));
         cf1=cfold(cellfun(@(x) isempty(strfind(x,num2str('bands'))),cfold));
         cd(cf1{1})
 
@@ -60,26 +91,49 @@ close all
         cfold=dir;
         cfold={cfold.name};
         cfold=cfold(cellfun(@(x) ~isempty(strfind(x,'.mat')),cfold));
-        cfold=cfold(cellfun(@(x) ~isempty(strfind(x,label1{lab})),cfold));
-        signal_ds=load(cfold{1});
-        signal_ds=getfield(signal_ds,erase(cfold{1},'.mat'));
+
+%         cfold=cfold(cellfun(@(x) ~isempty(strfind(x,label1{lab})),cfold));
+%         signal_ds=load(cfold{1});
+%         signal_ds=getfield(signal_ds,erase(cfold{1},'.mat'));
+        if  ~isempty(cfold(cellfun(@(x) ~isempty(strfind(x,label1{lab})),cfold))) %When both areas were recorded
+            cfold=cfold(cellfun(@(x) ~isempty(strfind(x,label1{lab})),cfold));
+        end
+            signal_ds=load(cfold{1});
+            signal_ds=getfield(signal_ds,erase(cfold{1},'.mat'));
+        if isempty(cfold(cellfun(@(x) ~isempty(strfind(x,label1{lab})),cfold)))
+           signal_ds=signal_ds.*0; % Since signal was not recorded make it zero.
+        end
 
         %Bandpassing.
         if ~strcmp(FN{k},'RawSignal')
             GF=getfield(freq_band,FN{k});
-            Wn=[GF(1)/(fs_new/2) GF(2)/(fs_new/2) ]; % Sampling freq=300 Hz.
+            Wn=[GF(1)/(fs_new/2) GF(2)/(fs_new/2) ]; % Sampling freq=500 Hz.
             [b,a] = butter(3,Wn); %Filter coefficients for LPF
             signal_ds=filtfilt(b,a,signal_ds);    
         end
+stats_vec(lab,k,1)=mean(signal_ds);
+stats_vec(lab,k,2)=std(signal_ds);
+
         %Normalized version
+       if ~isempty(cfold(cellfun(@(x) ~isempty(strfind(x,label1{lab})),cfold))) %If signal is not zero.
         signal_normal=(signal_ds-mean(signal_ds))/std(signal_ds);
+       else
+        signal_normal=signal_ds;
+       end        
+%        signal_normal=(signal_ds-mean(signal_ds))/std(signal_ds);
+        clear signal_ds
         uplim=repmat(mean(signal_normal)+2*std(signal_normal),length(signal_normal),1);
         lowlim=repmat(mean(signal_normal)-2*std(signal_normal),length(signal_normal),1);
         
-%         signal_normal=(signal_ds);        
+%         signal_normal=(signal_ds);
+stats_vec_norm(lab,k,1)=mean(signal_normal);
+stats_vec_norm(lab,k,2)=std(signal_normal);
 %xo
             if plot_allanimals==1;
                 if lab==1
+                        if k==1
+                            allscreen()% Enlarges figure size to fit screen. Download it from ADRITOOLS github.
+                        end
                         plot(linspace(t1(r),t2(r),length(signal_normal)),signal_normal*amp_vec(k)+100*k,'Color',colorvec(k,:))
                         hold on
                         plot(linspace(t1(r),t2(r),length(signal_normal)),uplim*amp_vec(k)+100*k,'Color',[0 0 0],'LineWidth',1)
@@ -94,6 +148,7 @@ close all
 
                         xlabel('Time')                    
                 end
+                clear uplim lowlim
             else
                 %% Epoching data
                 T1=1;
@@ -124,7 +179,7 @@ close all
         end
             if plot_allanimals==1;
 %                title(strcat('Normalized',{' '}, 'recordings',{' '},'Rat',num2str(rats(r))))
-                title(strcat('Rat',num2str(rats(r))))
+                title(['Rat',' ',num2str(rats(r)),' (',rat_condition{r},')'],'FontSize',12)
 
                 yticks([100 200 300 400 500 600 700 800 900 1000])
 %                 yticklabels({FN{1},FN{2},FN{3},FN{4},FN{5},FN{1},FN{2},FN{3},FN{4},FN{5}})
@@ -132,10 +187,12 @@ close all
 yticklabels({['HPC',' ','Raw'],['HPC',' ','Delta',' ','(0.1-4Hz)'],['HPC',' ','Theta',' ','(4-8Hz)'],['HPC',' ','Spindles',' ','(10-20Hz)'],['HPC',' ','HighGamma',' ','(80-250Hz)'],['PFC',' ','Raw'],['PFC',' ','Delta',' ','(0.1-4Hz)'],['PFC',' ','Theta',' ','(4-8Hz)'],['PFC',' ','Spindles',' ','(10-20Hz)'],['PFC',' ','HighGamma',' ','(80-250Hz)']}) 
                 
                 ylim([0 600+500])
-                xo
+                xlim([min(t1) max(t2)]);
                 cd(selpath)
-                saveas(gcf,strcat(label1{lab},'_Rat',num2str(rats(r)),'_bands_zoomed_all_areas','.fig'))
-
+                save(['stats_' 'Rat' num2str(rats(r)) '.mat'],'stats_vec','stats_vec_norm');
+                xo
+                saveas(gcf,strcat('Rat',num2str(rats(r)),'_all_bands_STD','.png'))
+%                 savefig(gcf,strcat('xRat',num2str(rats(r)),'_all_bands_STD','.fig'),'compact') 
                 close all
             end
     end
