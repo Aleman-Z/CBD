@@ -4,7 +4,7 @@ selpath = uigetdir('C:\','Add CBD github folder to path');
 addpath(genpath(selpath))
 
 cd(selpath)
-load('CBD_3.mat')
+load('CBD_4.mat')
 clear selpath
 
 selpath = uigetdir('C:\','Select folder with Downsampled_data');
@@ -16,6 +16,17 @@ t1(2) = duration([11 53 0]);
 t1(3) = duration([12 0 0]);
 t1(4) = duration([11 54 0]);
 
+
+%Starting times for Rat9-Rat16.
+t1(5) = duration([16 20 0]);
+t1(6) = duration([15 21 0]);
+t1(7) = duration([15 45 0]);
+t1(8) = duration([17 18 0]);
+t1(9) = duration([11 30 0]);
+t1(10) = duration([11 30 0]);
+t1(11) = duration([11 24 0]);
+t1(12) = duration([11 35 0]);
+
 t2=t1+seconds(durations_trials)'; %Values calculated from a previous iteration.
 % xo
 freq_band.RawSignal=[0 500-1];
@@ -25,10 +36,10 @@ freq_band.SpindlesRange=[10 20];
 freq_band.HighGamma=[80 250]; %250 
 FN=fieldnames(freq_band);
 
-fs=1000; %Sampling freq after downsampling.
+fs=500; %Sampling freq after downsampling.
 %% 
 close all
-for lab=1:length(label1)
+for lab=2:length(label1)
     for k=1:length(fieldnames(freq_band))
         for r=1:length(rats)
 
@@ -38,17 +49,23 @@ for lab=1:length(label1)
         % %Find and access proper folder.
         cfold=dir;
         cfold={cfold.name};
-        cf1=cfold(cellfun(@(x) ~isempty(strfind(x,num2str(rats(r)))),cfold));
+        cf1=cfold(cellfun(@(x) ~isempty(strfind(x,strcat('Rat',num2str(rats(r))))),cfold));
         cd(cf1{1})
 
         % %Find and load .mat files.
         cfold=dir;
         cfold={cfold.name};
         cfold=cfold(cellfun(@(x) ~isempty(strfind(x,'.mat')),cfold));
-        cfold=cfold(cellfun(@(x) ~isempty(strfind(x,label1{lab})),cfold));
-        signal_ds=load(cfold{1});
-        signal_ds=getfield(signal_ds,erase(cfold{1},'.mat'));
-
+        if  ~isempty(cfold(cellfun(@(x) ~isempty(strfind(x,label1{lab})),cfold))) %When both areas were recorded
+            cfold=cfold(cellfun(@(x) ~isempty(strfind(x,label1{lab})),cfold));
+        end
+            signal_ds=load(cfold{1});
+            signal_ds=getfield(signal_ds,erase(cfold{1},'.mat'));
+        if isempty(cfold(cellfun(@(x) ~isempty(strfind(x,label1{lab})),cfold)))
+           signal_ds=signal_ds.*0; % Since signal was not recorded make it zero.
+        end
+   
+        
         %Bandpassing.
         if ~strcmp(FN{k},'RawSignal')
             GF=getfield(freq_band,FN{k});
@@ -57,7 +74,11 @@ for lab=1:length(label1)
             signal_ds=filtfilt(b,a,signal_ds);    
         end
         
+       if ~isempty(cfold(cellfun(@(x) ~isempty(strfind(x,label1{lab})),cfold))) %If signal is not zero.
         signal_normal=(signal_ds-mean(signal_ds))/std(signal_ds);
+       else
+        signal_normal=signal_ds;
+       end
 
             if plot_allanimals==1;
                 plot(linspace(t1(r),t2(r),length(signal_normal)),signal_normal+100*r)
@@ -89,10 +110,13 @@ for lab=1:length(label1)
             end
         % ylabel('Rat')
         end
+        
         if plot_allanimals==1;
-            title(strcat('Normalized',{' '},label1{lab},{' '}, 'recording',{' '},FN{k}))
-            yticks([100 200 300 400])
-            yticklabels({'Rat 2','Rat 3','Rat 4','Rat 5'}) 
+            title(strcat('Normalized',{' '},label1{lab},{' '}, 'recording',{' '},FN{k}),'FontSize',12)
+            yticks([(1:length(rats))*100]);
+%             yticklabels({'Rat 2','Rat 3','Rat 4','Rat 5'}) 
+            yticklabels({'Rat 2','Rat 3','Rat 4','Rat 5','Rat 9','Rat 10','Rat 11','Rat 12','Rat 13','Rat 14','Rat 15','Rat 16'}) 
+            ylim([0 (length(rats)+1)*100])
             xo
             saveas(gcf,strcat(label1{lab},'_traces',FN{k},'.fig'))
 
