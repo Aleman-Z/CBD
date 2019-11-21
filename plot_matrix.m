@@ -39,7 +39,7 @@ FN=fieldnames(freq_band);
 fs=500; %Sampling freq after downsampling.
 %% 
 close all
-for lab=2:length(label1)
+for lab=1:length(label1)
     for k=1:length(fieldnames(freq_band))
         for r=1:length(rats)
 
