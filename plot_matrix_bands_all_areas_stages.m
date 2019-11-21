@@ -148,7 +148,7 @@ stats_vec_norm(lab,k,2)=std(signal_normal);
                         plot(linspace(t1(r),t2(r),length(signal_normal)),lowlim*amp_vec(k)+100*k+500,'Color',[0 0 0],'LineWidth',1)
 if k==1 && lab==2
    bar(linspace(t1(r),t2(r),length(signal_normal)),(signal_normal>uplim(1)| signal_normal<lowlim(1)).*1100,'r'); alpha(0.6) 
-%xo
+xo
 end
                         xlabel('Time')                    
                 end
