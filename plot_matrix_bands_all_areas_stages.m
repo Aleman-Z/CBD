@@ -133,6 +133,33 @@ stats_vec_norm(lab,k,2)=std(signal_normal);
                 if lab==1
                         if k==1
                             allscreen()% Enlarges figure size to fit screen. Download it from ADRITOOLS github.
+                                if r==8  %HPC raw for rat 12.
+                                    
+                                        fact=2;    
+                                        uplim=mean(signal_normal)+fact*std(signal_normal);
+                                        lowlim=mean(signal_normal)-fact*std(signal_normal);
+                                        %xo
+                                        nsig=envelope(signal_normal);
+                                        %nsig=(signal_normal>uplim(1)| signal_normal<lowlim(1));
+                                        nsig=(nsig>uplim(1)| nsig<lowlim(1));
+                                        nonZeroElements = nsig ~= 0;
+                                        %minSeparation = 50000;
+                                        %minSeparation = 10000;
+                                        minSeparation=60*(fs_new); %10 seconds
+
+                                        nonZeroElements = ~bwareaopen(~nonZeroElements, minSeparation);
+                                        [labeledRegions, numRegions] = bwlabel(nonZeroElements);
+                                        labeledRegions(labeledRegions~=0)=1;
+
+                                        %Minimum of 3 sec duration.
+                                        labeledRegions=min_duration(labeledRegions,3,fs_new);
+
+                                        h=area(linspace(t1(r),t2(r),length(signal_normal)),labeledRegions.*1100);
+                                        h.FaceColor=[1 0 0];
+                                        h.FaceAlpha=0.2;
+
+                                    
+                                end
                         end
                         plot(linspace(t1(r),t2(r),length(signal_normal)),signal_normal*amp_vec(k)+100*k,'Color',colorvec(k,:))
                         hold on
@@ -146,10 +173,51 @@ stats_vec_norm(lab,k,2)=std(signal_normal);
                         hold on
                         plot(linspace(t1(r),t2(r),length(signal_normal)),uplim*amp_vec(k)+100*k+500,'Color',[0 0 0],'LineWidth',1)
                         plot(linspace(t1(r),t2(r),length(signal_normal)),lowlim*amp_vec(k)+100*k+500,'Color',[0 0 0],'LineWidth',1)
-if k==1 && lab==2
-   bar(linspace(t1(r),t2(r),length(signal_normal)),(signal_normal>uplim(1)| signal_normal<lowlim(1)).*1100,'r'); alpha(0.6) 
-xo
+
+if (k==1 && lab==2)  % Threshold on PFC raw for most animals except rat12.
+        %xo
+    fact=2;    
+    uplim=mean(signal_normal)+fact*std(signal_normal);
+    lowlim=mean(signal_normal)-fact*std(signal_normal);
+    %xo
+    nsig=envelope(signal_normal);
+    %nsig=(signal_normal>uplim(1)| signal_normal<lowlim(1));
+    nsig=(nsig>uplim(1)| nsig<lowlim(1));
+    nonZeroElements = nsig ~= 0;
+    %minSeparation = 50000;
+    %minSeparation = 10000;
+    minSeparation=60*(fs_new); %10 seconds
+
+    nonZeroElements = ~bwareaopen(~nonZeroElements, minSeparation);
+    [labeledRegions, numRegions] = bwlabel(nonZeroElements);
+    labeledRegions(labeledRegions~=0)=1;
+    
+    %Minimum of 3 sec duration.
+    labeledRegions=min_duration(labeledRegions,3,fs_new);
+    
+    h=area(linspace(t1(r),t2(r),length(signal_normal)),labeledRegions.*1100);
+    h.FaceColor=[1 0 0];
+    h.FaceAlpha=0.2;
+    % % alpha(0.3)
+
+    % 
+    % sh=stairs(labeledRegions);
+    % 
+    % bottom = min(sh.YData);
+    % x = [sh.XData(1),repelem(sh.XData(2:end),2)];
+    % y = [repelem(sh.YData(1:end-1),2),sh.YData(end)];
+    % % plot(x,y,'y:') %should match stair plot
+    % % Fill area
+    % fill([x,fliplr(x)],[y,bottom*ones(size(y))], 'r')
+
+
+    % Nsig=or(ischange(double(nsig)),nsig);
+
+    %[nsig]=min_duration(nsig,1,fs_new);
+    % bar(linspace(t1(r),t2(r),length(signal_normal)),nsig.*1100,'r'); alpha(0.6); 
+    %xo
 end
+
                         xlabel('Time')                    
                 end
                 clear uplim lowlim
@@ -193,9 +261,10 @@ yticklabels({['HPC',' ','Raw'],['HPC',' ','Delta',' ','(0.1-4Hz)'],['HPC',' ','T
                 ylim([0 600+500])
                 xlim([min(t1) max(t2)]);
                 cd(selpath)
-                save(['stats_' 'Rat' num2str(rats(r)) '.mat'],'stats_vec','stats_vec_norm');
-                xo
-                saveas(gcf,strcat('Rat',num2str(rats(r)),'_all_bands_STD','.png'))
+%                xo
+%                 save(['stats_' 'Rat' num2str(rats(r)) '.mat'],'stats_vec','stats_vec_norm');
+                %xo
+                saveas(gcf,strcat('Rat',num2str(rats(r)),'_states60','.png'))
 %                 savefig(gcf,strcat('xRat',num2str(rats(r)),'_all_bands_STD','.fig'),'compact') 
                 close all
             end
