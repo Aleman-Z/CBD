@@ -10,7 +10,7 @@ selpath = uigetdir('C:\','Add CBD github folder to path');
 addpath(genpath(selpath))
 
 cd(selpath)
-load('CBD_4.mat')
+load('CBD_5.mat')
 clear selpath
 
 %Go to folder with CBD Matlab files.
