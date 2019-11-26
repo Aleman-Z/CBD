@@ -4,7 +4,7 @@ selpath = uigetdir('C:\','Add CBD github folder to path');
 addpath(genpath(selpath))
 
 cd(selpath)
-load('CBD_4.mat')
+load('CBD_5.mat')
 clear selpath
 
 selpath = uigetdir('C:\','Select folder with Downsampled_data');
@@ -79,7 +79,7 @@ close all
 
         % cd('C:\Users\addri\Documents\Donders\Projects\CBD\Downsampled_data')
         cd(selpath)
-
+%xo
         % %Find and access proper folder.
         cfold=dir;
         cfold={cfold.name};
@@ -103,7 +103,7 @@ close all
         if isempty(cfold(cellfun(@(x) ~isempty(strfind(x,label1{lab})),cfold)))
            signal_ds=signal_ds.*0; % Since signal was not recorded make it zero.
         end
-
+%xo
         %Bandpassing.
         if ~strcmp(FN{k},'RawSignal')
             GF=getfield(freq_band,FN{k});
@@ -139,22 +139,33 @@ stats_vec_norm(lab,k,2)=std(signal_normal);
                                         uplim=mean(signal_normal)+fact*std(signal_normal);
                                         lowlim=mean(signal_normal)-fact*std(signal_normal);
                                         %xo
-                                        nsig=envelope(signal_normal);
+                                        
+                                        Wn=[freq_band.Delta(1)/(fs_new/2) freq_band.Delta(2)/(fs_new/2) ]; % Sampling freq=500 Hz.
+                                        [b,a] = butter(3,Wn); %Filter coefficients for LPF
+                                        signal_ds=filtfilt(b,a,signal_normal);    
+                                        
+%                                         nsig=envelope(signal_normal);
+                                        nsig=envelope(signal_ds);
+                                        clear signal_ds
+                                                                                
                                         %nsig=(signal_normal>uplim(1)| signal_normal<lowlim(1));
                                         nsig=(nsig>uplim(1)| nsig<lowlim(1));
                                         nonZeroElements = nsig ~= 0;
+                                        clear nsig
                                         %minSeparation = 50000;
                                         %minSeparation = 10000;
-                                        minSeparation=60*(fs_new); %10 seconds
+                                        minSeparation=10*(fs_new); %10 seconds
 
                                         nonZeroElements = ~bwareaopen(~nonZeroElements, minSeparation);
                                         [labeledRegions, numRegions] = bwlabel(nonZeroElements);
+                                        clear nonZeroElements
                                         labeledRegions(labeledRegions~=0)=1;
 
                                         %Minimum of 3 sec duration.
                                         labeledRegions=min_duration(labeledRegions,3,fs_new);
 
                                         h=area(linspace(t1(r),t2(r),length(signal_normal)),labeledRegions.*1100);
+                                        clear labeledRegions
                                         h.FaceColor=[1 0 0];
                                         h.FaceAlpha=0.2;
 
@@ -180,16 +191,24 @@ if (k==1 && lab==2)  % Threshold on PFC raw for most animals except rat12.
     uplim=mean(signal_normal)+fact*std(signal_normal);
     lowlim=mean(signal_normal)-fact*std(signal_normal);
     %xo
-    nsig=envelope(signal_normal);
+    Wn=[freq_band.Delta(1)/(fs_new/2) freq_band.Delta(2)/(fs_new/2) ]; % Sampling freq=500 Hz.
+    [b,a] = butter(3,Wn); %Filter coefficients for LPF
+    signal_ds=filtfilt(b,a,signal_normal);    
+    
+    %nsig=envelope(signal_normal);
+    nsig=envelope(signal_ds);
+    clear signal_ds
+    
     %nsig=(signal_normal>uplim(1)| signal_normal<lowlim(1));
     nsig=(nsig>uplim(1)| nsig<lowlim(1));
     nonZeroElements = nsig ~= 0;
     %minSeparation = 50000;
     %minSeparation = 10000;
-    minSeparation=60*(fs_new); %10 seconds
+    minSeparation=10*(fs_new); %10 seconds
 
     nonZeroElements = ~bwareaopen(~nonZeroElements, minSeparation);
     [labeledRegions, numRegions] = bwlabel(nonZeroElements);
+    clear nonZeroElements numRegions
     labeledRegions(labeledRegions~=0)=1;
     
     %Minimum of 3 sec duration.
@@ -261,10 +280,10 @@ yticklabels({['HPC',' ','Raw'],['HPC',' ','Delta',' ','(0.1-4Hz)'],['HPC',' ','T
                 ylim([0 600+500])
                 xlim([min(t1) max(t2)]);
                 cd(selpath)
-%                xo
+                xo
 %                 save(['stats_' 'Rat' num2str(rats(r)) '.mat'],'stats_vec','stats_vec_norm');
                 %xo
-                saveas(gcf,strcat('Rat',num2str(rats(r)),'_states60','.png'))
+                saveas(gcf,strcat('Rat',num2str(rats(r)),'_states10','.png'))
 %                 savefig(gcf,strcat('xRat',num2str(rats(r)),'_all_bands_STD','.fig'),'compact') 
                 close all
             end
