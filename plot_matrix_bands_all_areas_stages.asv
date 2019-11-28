@@ -73,7 +73,7 @@ close all
 % stats_vec_norm=nan(length(rats),length(label1),length(fieldnames(freq_band)),2); %Declare vector to save values.
 
 %for lab=1:length(label1)
-    for r=1:length(rats)
+    for r=8:length(rats)
         stats_vec=nan(length(label1),length(fieldnames(freq_band)),2); %Declare vector to save values.
         stats_vec_norm=nan(length(label1),length(fieldnames(freq_band)),2); %Declare vector to save values.
        
@@ -293,13 +293,10 @@ end
         
         if logic_or==1
             if sum(labeledRegions_PFC)~=0 && sum(labeledRegions_HPC)~=0 
-                labeledRegions=or(labeledRegions_HPC,labeledRegions_PFC); %OR logic for both HPC and PFC on-off states.
+                labeledRegions=or(labeledRegions_HPC,labeledRegions_PFC);
             else
-                %When we only have one region use that one.
                 if sum(labeledRegions_PFC)==0
-                       labeledRegions=(labeledRegions_HPC);
                 else
-                       labeledRegions=(labeledRegions_PFC);                    
                 end
             end
             clear labeledRegions_HPC labeledRegions_PFC
