@@ -64,6 +64,8 @@ rat_condition={
 'CBD'
 'CBD'
     };
+
+fact=2;
 %% 
 close all
 % stats_vec=nan(length(rats),length(label1),length(fieldnames(freq_band)),2); %Declare vector to save values.
@@ -135,7 +137,7 @@ stats_vec_norm(lab,k,2)=std(signal_normal);
                             allscreen()% Enlarges figure size to fit screen. Download it from ADRITOOLS github.
                                 if r==8  %HPC raw for rat 12.
                                     
-                                        fact=2;    
+%                                         fact=2;    
                                         uplim=mean(signal_normal)+fact*std(signal_normal);
                                         lowlim=mean(signal_normal)-fact*std(signal_normal);
                                         %xo
@@ -187,7 +189,7 @@ stats_vec_norm(lab,k,2)=std(signal_normal);
 
 if (k==1 && lab==2)  % Threshold on PFC raw for most animals except rat12.
         %xo
-    fact=2;    
+%     fact=2;    
     uplim=mean(signal_normal)+fact*std(signal_normal);
     lowlim=mean(signal_normal)-fact*std(signal_normal);
     %xo
