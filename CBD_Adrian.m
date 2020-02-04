@@ -63,7 +63,7 @@ cfold=cfold(cellfun(@(x) ~isempty(strfind(x,'.continuous')),cfold));
 
 %Parameters
 fs=30000; %Sampling frequency of acquisition.
-fs_new=500; %New sampling frequency. Max freq= fs_new/2.
+fs_new=600; %New sampling frequency. Max freq= fs_new/2.
 
 %HPC
 if ~isnan(chan(1)) %Ideal case channel is not NaN.
