@@ -35,9 +35,9 @@ nr_cohfos_pt = [];
 rat_folder = getfolder;
 rat_folder=rat_folder(1:end-1);
 % for k=1:length(rat_folder)
-k=7
-while k<8
- %rat index 
+% k=7
+for k=1:length(rat_folder)
+    %rat index 
     cd(rat_folder{k})    
     g=getfolder;
     total_swrs=[];
@@ -567,7 +567,7 @@ save(strcat('ripple_phases_compilation_Rat',rat_folder{k},'.mat'),'ripple_phases
     end
 
     cd ..
-k=k+1        
+% k=k+1        
 end
 %         zsinglet_total=[];
 %         zdoublet_total=[];
