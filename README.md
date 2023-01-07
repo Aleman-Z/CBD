@@ -1,4 +1,4 @@
-# CBD 🌿
+# CBD 🌿 (pre-Tuk OUTDATED version)
 
 # Table of contents
 
